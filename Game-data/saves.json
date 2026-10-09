@@ -1,0 +1,11 @@
+{
+  "playerName": "小冒險家",
+  "selectedHero": "hero_purple",
+  "currentStage": 0,
+  "unlockedStages": [
+    0
+  ],
+  "highScore": 0,
+  "clearedAll": false,
+  "lastPlayed": "2026-10-04T00:00:00Z"
+}
