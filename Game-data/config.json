@@ -1,0 +1,219 @@
+{
+  "adminPassword": "j63514219",
+  "adminPasswordHash": "4f982b0f097f1461dcce7bfbc921813224743fb998d8644f69627eb5db3c0d1f",
+  "soundEnabled": true,
+  "randomizeOptions": true,
+  "version": "2026.10.06",
+  "title": "黑金魔法術：永續食物循環系統",
+  "customImages": {
+    "hero_sprite.png": "assets/images/custom/hero_sprite.png?t=1791120626",
+    "avatar_purple.png": "assets/images/custom/avatar_purple.png?t=1791120626",
+    "hero_sprite_round.png": "assets/images/custom/hero_sprite_round.png?t=1791120626",
+    "avatar_round.png": "assets/images/custom/avatar_round.png?t=1791120626",
+    "hero_sprite_syl.png": "assets/images/custom/hero_sprite_syl.png?t=1791120626",
+    "avatar_syl.png": "assets/images/custom/avatar_syl.png?t=1791120626",
+    "hero_sprite_mul.png": "assets/images/custom/hero_sprite_mul.png?t=1791120626",
+    "avatar_mul.png": "assets/images/custom/avatar_mul.png?t=1791120626",
+    "slime_sprite.png": "assets/images/custom/slime_sprite.png?t=1791120626",
+    "mirage_sprite.png": "assets/images/custom/mirage_sprite.png?t=1791120626",
+    "demon_sprite.png": "assets/images/custom/demon_sprite.png?t=1791120626",
+    "frost_sprite.png": "assets/images/custom/frost_sprite.png?t=1791120626",
+    "boss_sprite.png": "assets/images/custom/boss_sprite.png?t=1791120626",
+    "forest_bg.jpg": "assets/images/custom/forest_bg.jpg?t=1791120626",
+    "desert_bg.jpg": "assets/images/custom/desert_bg.jpg?t=1791120626",
+    "river_bg.jpg": "assets/images/custom/river_bg.jpg?t=1791120626",
+    "highway_bg.jpg": "assets/images/custom/highway_bg.jpg?t=1791120626",
+    "sacred_bg.jpg": "assets/images/custom/sacred_bg.jpg?t=1791120626",
+    "title_bg.jpg": "assets/images/custom/title_bg.jpg?t=1791120626",
+    "world_map.jpg": "assets/images/custom/world_map.jpg?t=1791120626"
+  },
+  "heroesConfig": {
+    "hero_purple": {
+      "name": "莫莫",
+      "fullName": "黑金魔法師 · 莫莫 Momo",
+      "title": "黑金魔法師",
+      "rhyme": "落葉果皮變黑金，微生物是好幫手",
+      "attackName": "落葉腐植魔彈",
+      "desc": "溪洲魔法生態學院首席導師，精通微生物分解魔法，擅長將廢棄落葉與生廚餘轉化為黑色黃金。",
+      "hp": 100,
+      "mp": 60,
+      "atk": 22,
+      "critRate": 15,
+      "critMult": 2.2,
+      "dmgReduction": 10,
+      "skills": {
+        "skill1": {
+          "name": "落葉腐植聚爆",
+          "cost": 15,
+          "mult": 2.2,
+          "desc": "凝聚落葉與高溫發酵魔力，答對造成 2.2 倍暴擊傷害！"
+        },
+        "skill2": {
+          "name": "微生菌絲滋養",
+          "cost": 10,
+          "heal": 45,
+          "mana": 10,
+          "desc": "召喚有益微生菌群，答對回復 45 HP 並回充 10 MP！"
+        },
+        "skill3": {
+          "name": "堆肥魔眼透視",
+          "cost": 20,
+          "removeCount": 2,
+          "desc": "洞察題目迷思，立即排除 2 個錯誤干擾選項！"
+        }
+      }
+    },
+    "hero_round": {
+      "name": "寇寇",
+      "fullName": "堆肥小勇士 · 寇寇 Koko",
+      "title": "翻堆大地聖騎",
+      "rhyme": "勤翻堆又保通氣，土壤鬆軟根鬚壯",
+      "attackName": "耕耘金鏟重擊",
+      "desc": "熱情愛地球的小勇士，手持魔法翻堆金鏟與通氣重盾，體力充沛，守護大地生態與健康菜園。",
+      "hp": 130,
+      "mp": 40,
+      "atk": 20,
+      "critRate": 10,
+      "critMult": 1.8,
+      "dmgReduction": 25,
+      "skills": {
+        "skill1": {
+          "name": "金鏟破土狂擊",
+          "cost": 15,
+          "mult": 2,
+          "desc": "揮動耕耘金鏟奮力翻土，造成 2.0 倍堅定破土傷害！"
+        },
+        "skill2": {
+          "name": "沃土大地壁壘",
+          "cost": 10,
+          "heal": 55,
+          "mana": 5,
+          "desc": "引導黑金沃土之靈，答對大幅回復 55 HP！"
+        },
+        "skill3": {
+          "name": "通氣翻堆明晰",
+          "cost": 20,
+          "removeCount": 2,
+          "desc": "翻動堆肥通入新鮮空氣，迅速排除 2 個錯誤選項！"
+        }
+      }
+    },
+    "hero_syl": {
+      "name": "露露",
+      "fullName": "分類精靈 · 露露 Lulu",
+      "title": "源頭守護精靈",
+      "rhyme": "生熟廚餘分清楚，塑膠雜物不准進",
+      "attackName": "雙葉分流疾刺",
+      "desc": "靈巧活潑的分類精靈，擁有明察秋毫的雙眼，一眼看穿混在廚餘裡的塑膠與雜物，捍衛純淨循環。",
+      "hp": 90,
+      "mp": 70,
+      "atk": 15,
+      "critRate": 25,
+      "critMult": 1.6,
+      "dmgReduction": 5,
+      "skills": {
+        "skill1": {
+          "name": "源頭破邪雙刺",
+          "cost": 18,
+          "mult": 2.5,
+          "desc": "發動雙葉極速迴旋突刺，造成 2.5 倍極高破防傷害！"
+        },
+        "skill2": {
+          "name": "純淨泉源甘露",
+          "cost": 12,
+          "heal": 40,
+          "mana": 15,
+          "desc": "灑下無污染之純淨甘露，回復 40 HP 與 15 MP！"
+        },
+        "skill3": {
+          "name": "精靈明眸洞察",
+          "cost": 20,
+          "removeCount": 2,
+          "desc": "精準識破非廚餘異物，立即排除 2 個錯誤干擾選項！"
+        }
+      }
+    },
+    "hero_mul": {
+      "name": "嘟嘟",
+      "fullName": "熟食巡守俠 · 嘟嘟 Dudu",
+      "title": "熟廚餘循環大使",
+      "rhyme": "熟飯菜湯要瀝乾，豬豬飽餐力氣大",
+      "attackName": "大胃元氣衝撞",
+      "desc": "豬豬大胃王巡守使，最愛瀝乾後的美味熟飯菜，將剩飯剩菜循環為健康成長的元氣力量！",
+      "hp": 115,
+      "mp": 45,
+      "atk": 20,
+      "critRate": 18,
+      "critMult": 2,
+      "dmgReduction": 15,
+      "skills": {
+        "skill1": {
+          "name": "豬豬飽食暴擊",
+          "cost": 15,
+          "mult": 2.3,
+          "desc": "飽餐熟廚餘後的元氣爆發，造成 2.3 倍猛烈衝擊！"
+        },
+        "skill2": {
+          "name": "美味熟食飽餐",
+          "cost": 10,
+          "heal": 50,
+          "mana": 8,
+          "desc": "享受瀝乾後的營養美食，瞬間回復 50 HP！"
+        },
+        "skill3": {
+          "name": "大胃直覺嗅探",
+          "cost": 20,
+          "removeCount": 2,
+          "desc": "憑藉靈敏食慾嗅覺，精準排除 2 個錯誤選項！"
+        }
+      }
+    }
+  },
+  "bossesConfig": [
+    {
+      "chapterIndex": 0,
+      "chapterTitle": "第一章：學院惜食大廳",
+      "enemyName": "浪費剩食怪",
+      "hp": 100,
+      "atk": 15,
+      "attackInterval": 6,
+      "desc": "由學生吃不完倒掉的飯菜湯水凝聚而成的黏稠巨魔，考驗餐桌惜食與源頭減量智慧！"
+    },
+    {
+      "chapterIndex": 1,
+      "chapterTitle": "第二章：中央分類迴廊",
+      "enemyName": "混雜垃圾魔",
+      "hp": 140,
+      "atk": 20,
+      "attackInterval": 5.5,
+      "desc": "全身纏繞塑膠袋、免洗筷、橡皮筋與飲料杯的狂暴魔物，企圖污染乾淨的廚餘桶！考驗生廚餘、熟廚餘與一般垃圾的精準分類眼力。"
+    },
+    {
+      "chapterIndex": 2,
+      "chapterTitle": "第三章：黑金發酵溫室",
+      "enemyName": "惡臭果蠅王",
+      "hp": 180,
+      "atk": 25,
+      "attackInterval": 5,
+      "desc": "堆肥太濕、缺乏通風引來的巨大腐臭果蠅魔王，嗡嗡亂飛製造刺鼻氣味。考驗碳氮比例平衡、瀝乾控水與翻堆技巧！"
+    },
+    {
+      "chapterIndex": 3,
+      "chapterTitle": "第四章：陽光有機菜園",
+      "enemyName": "板結枯土巨魔",
+      "hp": 220,
+      "atk": 28,
+      "attackInterval": 4.5,
+      "desc": "長期缺乏有機質而硬如鋼鐵的板結乾裂怪石，讓植物根部窒息。考驗以熟成黑金堆肥改良土壤、喚醒大地生機的能力！"
+    },
+    {
+      "chapterIndex": 4,
+      "chapterTitle": "第五章：永續生命神殿",
+      "enemyName": "失衡異變巨神",
+      "hp": 280,
+      "atk": 32,
+      "attackInterval": 4,
+      "desc": "食物鏈斷裂、大量垃圾掩埋焚燒造成的巨大煙塵異變邪神。唯有串連「土地到餐桌到土地」的完整循環，方能守護綠色地球！"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": "exam_grand_challenge",
+    "title": "🌟 溪洲魔法生態學院：全能黑金守護戰（全題庫）",
+    "category": "綜合考驗",
+    "desc": "挑戰涵蓋土地、惜食、分類、堆肥與永續全方位的 15 道精選題目，戰勝五大關主，完成黑金大循環！",
+    "bankIds": [
+      "bank_soil_basics",
+      "bank_table_waste_reduction",
+      "bank_kitchen_sorting",
+      "bank_composting_recipe",
+      "bank_eco_cycle_advanced"
+    ],
+    "questionCount": 15,
+    "enabled": true,
+    "createdAt": "2026-10-04T00:00:00Z"
+  },
+  {
+    "id": "exam_sorting_master",
+    "title": "♻️ 廚餘分類王與源頭惜食大考驗（精選特訓）",
+    "category": "分類特訓",
+    "desc": "專注於生廚餘、熟廚餘與一般垃圾的眼力大考驗，磨練你的分類直覺，助豬豬飽餐並挑出堆肥珍寶！",
+    "bankIds": [
+      "bank_table_waste_reduction",
+      "bank_kitchen_sorting"
+    ],
+    "questionCount": 12,
+    "enabled": true,
+    "createdAt": "2026-10-04T00:00:00Z"
+  },
+  {
+    "id": "exam_compost_recipe",
+    "title": "🍂 黑金堆肥方程式與土壤魔法挑戰賽",
+    "category": "堆肥工藝",
+    "desc": "深入探討碳氮比例平衡、水分握拳測試與翻堆技巧，學會化腐朽為神奇的黑金鍊金術！",
+    "bankIds": [
+      "bank_soil_basics",
+      "bank_composting_recipe"
+    ],
+    "questionCount": 12,
+    "enabled": true,
+    "createdAt": "2026-10-04T00:00:00Z"
+  },
+  {
+    "id": "exam_eco_sustainability",
+    "title": "🌍 永續食物循環與環境教育實踐檢定",
+    "category": "環境素養",
+    "desc": "連結食物里程、土壤碳匯與全球綠色生活行動，成為兼具知識與行動力的環境小衛士！",
+    "bankIds": [
+      "bank_eco_cycle_advanced"
+    ],
+    "questionCount": 10,
+    "enabled": true,
+    "createdAt": "2026-10-04T00:00:00Z"
+  },
+  {
+    "id": "exam_1791129460778",
+    "title": "四年級惜食教育─午餐剩食及廚餘減量的觀念及做法",
+    "category": "廚餘減量",
+    "desc": "挑戰20道午餐剩食及廚餘減量的問題",
+    "bankIds": [
+      "bank_1791129387276"
+    ],
+    "questionCount": 15,
+    "enabled": true,
+    "createdAt": "2026-10-04T15:57:40.778Z"
+  }
+]
