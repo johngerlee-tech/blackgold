@@ -1,0 +1,71 @@
+# ==========================================
+# 《黑金魔法術─永續食物循環系統》Git 忽略清單 (.gitignore)
+# ==========================================
+
+# Python 快取與編譯檔案
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# 虛擬環境 (Virtual Environments)
+env/
+venv/
+ENV/
+.venv/
+env.bak/
+venv.bak/
+
+# 建置與打包輸出
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+*.spec
+
+# 測試用臨時螢幕截圖與大型暫存檔
+test_battle_*.png
+edge_*_view.png
+edge_*.png
+startup_debug.log
+*.log
+
+# 大型備份壓縮檔 (避免膨脹 Git 倉庫)
+*.zip
+*.tar.gz
+*.rar
+
+# 作業系統快取檔案
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# 編輯器與 IDE 設定檔
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+
+# 本地私密設定與認證金鑰 (防止金鑰外洩至 GitHub)
+.env
+.env.local
+firebase-service-account*.json
