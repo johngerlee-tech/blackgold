@@ -1,0 +1,1765 @@
+/* ==========================================================================
+   《黑金魔法術─永續食物循環系統》- 遊戲主樣式表 (style.css)
+   ========================================================================== */
+
+:root {
+  --primary-green: #10b981;
+  --primary-emerald: #059669;
+  --dark-emerald: #064e3b;
+  --bg-dark: #0b0f19;
+  --card-dark: rgba(15, 23, 42, 0.85);
+  --card-border: rgba(16, 185, 129, 0.35);
+  --gold-text: #fde047;
+  --accent-gold: #f59e0b;
+  --hp-green: #10b981;
+  --mp-blue: #38bdf8;
+  --danger-red: #ef4444;
+  --font-main: "Fredoka", "Nunito", "Microsoft JhengHei", "PingFang TC", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #050811;
+  color: #f1f5f9;
+  font-family: var(--font-main);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+button, input, select {
+  touch-action: manipulation;
+}
+
+#game-app {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #0f172a 0%, #050811 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 跨載具等比例虛擬主舞台 (基準高度 720px，完美絕對中心錨定) */
+.game-stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(var(--stage-scale, 1));
+  transform-origin: center center;
+  width: var(--stage-width, 1280px);
+  height: 720px;
+  overflow: hidden;
+  background-color: var(--bg-dark);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.95);
+  will-change: transform;
+}
+
+/* 舞台內部各畫面撐滿虛擬尺寸 */
+.game-stage > section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 舞台內模態窗絕對貼齊舞台並等比例縮放 */
+.game-stage .modal-backdrop {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* 全域全螢幕按鈕 (適合平板與教室大螢幕) */
+.fullscreen-toggle-btn {
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  z-index: 9999;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1.5px solid rgba(253, 224, 71, 0.5);
+  color: #fde047;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.fullscreen-toggle-btn:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: #fde047;
+  transform: scale(1.05);
+  box-shadow: 0 0 16px rgba(250, 204, 21, 0.4);
+}
+
+.fullscreen-toggle-btn:active {
+  transform: scale(0.96);
+}
+
+/* 平板/手機直向友善提示膠囊 */
+.orientation-hint-pill {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: rgba(15, 23, 42, 0.96);
+  border: 2px solid #f59e0b;
+  border-radius: 999px;
+  padding: 8px 18px;
+  color: #fef08a;
+  font-size: 14px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 16px rgba(245, 158, 11, 0.4);
+  cursor: pointer;
+  animation: bounceHint 2s infinite ease-in-out;
+}
+
+.orientation-hint-pill .hint-icon {
+  font-size: 16px;
+}
+
+.orientation-hint-pill .hint-text {
+  letter-spacing: 0.5px;
+}
+
+.orientation-hint-pill .hint-close-btn {
+  background: none;
+  border: none;
+  color: #cbd5e1;
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+}
+
+.orientation-hint-pill .hint-close-btn:hover {
+  color: #ffffff;
+}
+
+@keyframes bounceHint {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -4px); }
+}
+
+/* ==========================================================================
+   通用 JRPG 按鈕與輸入元件
+   ========================================================================== */
+.jrpg-btn {
+  font-family: var(--font-main);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+  font-weight: 700;
+  outline: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.jrpg-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+}
+
+.jrpg-btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.btn-primary-large {
+  background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
+  color: #ffffff;
+  border-color: #6ee7b7;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.btn-primary-large:hover {
+  border-color: #a7f3d0;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+}
+
+.btn-secondary {
+  background: rgba(30, 41, 59, 0.85);
+  color: #cbd5e1;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary:hover {
+  background: rgba(51, 65, 85, 0.95);
+  color: #ffffff;
+  border-color: #94a3b8;
+}
+
+.jrpg-input, .jrpg-select {
+  font-family: var(--font-main);
+  background: rgba(15, 23, 42, 0.85);
+  border: 1.5px solid rgba(16, 185, 129, 0.4);
+  color: #f1f5f9;
+  border-radius: 8px;
+  padding: 8px 12px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.jrpg-input:focus, .jrpg-select:focus {
+  border-color: #34d399;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ==========================================================================
+   1. 主畫面 (Start Screen)
+   ========================================================================== */
+#start-screen {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  z-index: 10;
+}
+
+.start-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(11, 15, 25, 0.65) 0%, rgba(11, 15, 25, 0.92) 100%);
+  z-index: 1;
+}
+
+.start-header {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.game-logo-title {
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 900;
+  background: linear-gradient(135deg, #34d399 0%, #fde047 50%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 4px 12px rgba(16, 185, 129, 0.6));
+  letter-spacing: 2px;
+}
+
+.game-sub-title {
+  font-size: clamp(14px, 2vw, 22px);
+  color: #a7f3d0;
+  font-weight: 700;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+  margin-top: 4px;
+}
+
+/* 1.A 雙入口主選單 */
+.start-portal-card {
+  position: relative;
+  z-index: 2;
+  background: var(--card-dark);
+  border: 2px solid var(--card-border);
+  border-radius: 24px;
+  padding: 28px 36px;
+  max-width: 540px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+}
+
+.portal-synopsis {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #e2e8f0;
+  margin-bottom: 24px;
+  background: rgba(6, 78, 59, 0.4);
+  padding: 12px 16px;
+  border-radius: 12px;
+  border-left: 4px solid #10b981;
+}
+
+.portal-buttons-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.portal-main-btn {
+  padding: 14px 28px;
+  font-size: 20px;
+  border-radius: 16px;
+}
+
+.portal-sub-btn {
+  padding: 12px 24px;
+  font-size: 15px;
+  border-radius: 14px;
+}
+
+/* 1.B 角色整備與主題選單 */
+.start-content-card {
+  position: relative;
+  z-index: 2;
+  background: var(--card-dark);
+  border: 2px solid var(--card-border);
+  border-radius: 20px;
+  padding: 18px 24px;
+  max-width: 680px;
+  width: 92%;
+  max-height: 88%;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(12px);
+}
+
+.hero-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.hero-card-select {
+  background: rgba(30, 41, 59, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 8px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.hero-card-select:hover {
+  background: rgba(51, 65, 85, 0.85);
+  border-color: #34d399;
+}
+
+.hero-card-select.selected {
+  background: rgba(6, 78, 59, 0.85);
+  border-color: #fde047;
+  box-shadow: 0 0 14px rgba(250, 204, 21, 0.6);
+}
+
+.hero-select-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid #34d399;
+  object-fit: cover;
+  margin: 0 auto 4px;
+}
+
+.hero-select-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: #f1f5f9;
+}
+
+.hero-select-role {
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+.hero-detail-summary {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px dashed rgba(250, 204, 21, 0.4);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #e2e8f0;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.start-buttons-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.start-footer-credit {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.footer-author-link, .cc-badge-link {
+  color: #34d399;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   2. 大地圖畫面 (World Map)
+   ========================================================================== */
+#worldmap-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.worldmap-viewport {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+
+.map-top-bar {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+}
+
+.map-title-badge {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1.5px solid var(--card-border);
+  padding: 8px 16px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  backdrop-filter: blur(8px);
+}
+
+.map-title-text {
+  font-weight: 800;
+  color: var(--gold-text);
+  font-size: 15px;
+}
+
+.map-guide-hint {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.map-nav-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.top-bar-btn {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  color: #f1f5f9;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(8px);
+}
+
+.top-bar-btn:hover {
+  border-color: #34d399;
+  background: rgba(6, 78, 59, 0.8);
+}
+
+/* 大地圖關卡圖釘節點 */
+.map-stage-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 15;
+  transition: transform 0.2s;
+}
+
+.map-stage-node:hover {
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+.map-node-pill {
+  background: rgba(15, 23, 42, 0.9);
+  border: 2.5px solid #fde047;
+  border-radius: 20px;
+  padding: 6px 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.map-node-icon {
+  font-size: 20px;
+}
+
+.map-node-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: #f1f5f9;
+}
+
+.map-node-locked {
+  opacity: 0.5;
+  filter: grayscale(1);
+  border-color: #64748b;
+  cursor: not-allowed;
+}
+
+/* 玩家小人 Token (置於關卡標籤上方，清晰不遮蔽關卡名稱) */
+#map-player-sprite {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  margin-top: -12px;
+  z-index: 18;
+  pointer-events: none;
+  transition: left 0.4s ease-out, top 0.4s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.map-avatar-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid #fde047;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(250, 204, 21, 0.8);
+  background: #0f172a;
+}
+
+.map-avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.map-player-name-tag {
+  background: rgba(15, 23, 42, 0.85);
+  color: #fde047;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-top: 4px;
+  border: 1px solid rgba(250, 204, 21, 0.4);
+}
+
+/* 大地圖出戰角色切換面板 (預設置中呈現於畫面中間下方，清楚易見易操作) */
+.map-hero-switcher {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.94);
+  border: 2px solid #fde047;
+  border-radius: 20px;
+  padding: 10px 20px;
+  z-index: 25;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8), 0 0 16px rgba(250, 204, 21, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 95vw;
+}
+
+.switcher-header {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #fde047;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.switcher-list {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.switcher-btn {
+  background: rgba(30, 41, 59, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  padding: 6px 14px;
+  color: #f1f5f9;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.switcher-btn:hover {
+  background: rgba(51, 65, 85, 0.95);
+  border-color: #38bdf8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
+}
+
+.switcher-btn.active {
+  border-color: #fde047;
+  background: linear-gradient(135deg, rgba(6, 78, 59, 0.95) 0%, rgba(16, 185, 129, 0.9) 100%);
+  color: #fef08a;
+  font-weight: 900;
+  box-shadow: 0 0 14px rgba(250, 204, 21, 0.6);
+  transform: scale(1.05);
+}
+
+.switcher-avatar-img {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid #fde047;
+  object-fit: cover;
+  background: #0f172a;
+}
+
+/* ==========================================================================
+   3. 戰鬥畫面 (Battle Screen)
+   ========================================================================== */
+#battle-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  max-height: none !important;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: #0b0f19;
+}
+
+/* 上半部：固定對峙舞台 (固定高度 315px，佔 720px 基準之 ~43.75%) */
+.battle-visual-section {
+  flex: 0 0 315px !important;
+  height: 315px !important;
+  min-height: 315px !important;
+  max-height: 315px !important;
+  flex-shrink: 0 !important;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 頂部 VS 狀態條 */
+.battle-versus-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px 18px;
+  background: linear-gradient(180deg, rgba(11, 15, 25, 0.92) 0%, rgba(11, 15, 25, 0.4) 75%, rgba(11, 15, 25, 0) 100%);
+  z-index: 5;
+  flex-shrink: 0;
+}
+
+.hero-mini-status, .enemy-mini-status {
+  width: 250px;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 7px 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+}
+
+.hero-mini-name, .enemy-mini-name {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.hero-title-text { color: #34d399; }
+.enemy-name-title { color: #f87171; }
+.hero-lvl-tag, .chapter-tag { font-size: 12px; color: #94a3b8; font-weight: 700; }
+
+.mini-bar-container {
+  height: 11px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.3s ease-out;
+}
+
+.bar-hp-player {
+  background: linear-gradient(90deg, #059669 0%, #10b981 100%);
+}
+
+.bar-hp-enemy {
+  background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%);
+}
+
+.hero-hp-label, .enemy-hp-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #cbd5e1;
+  text-align: right;
+  margin-top: 3px;
+}
+
+/* 頂部中間對決 VS 與對峙雙方名稱 (勇者名稱 VS 關主名稱) */
+.versus-center-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px;
+  z-index: 6;
+}
+
+.versus-names-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.92);
+  border: 2px solid rgba(250, 204, 21, 0.65);
+  border-radius: 999px;
+  padding: 5px 22px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7), 0 0 12px rgba(250, 204, 21, 0.25);
+  backdrop-filter: blur(8px);
+}
+
+.vs-fighter-name {
+  font-size: clamp(14px, 1.4vw, 17.5px);
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.vs-fighter-name.vs-hero {
+  color: #34d399;
+  text-shadow: 0 0 10px rgba(52, 211, 153, 0.8);
+}
+
+.vs-fighter-name.vs-boss {
+  color: #f87171;
+  text-shadow: 0 0 10px rgba(248, 113, 113, 0.8);
+}
+
+.versus-badge-core {
+  font-size: 17px;
+  font-weight: 900;
+  font-style: italic;
+  color: #fde047;
+  text-shadow: 0 0 12px rgba(250, 204, 21, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8);
+  background: linear-gradient(180deg, #fef08a 0%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding: 0 4px;
+}
+
+/* 核心對峙舞台 (主角在左、魔王在右) */
+.battle-stage-arena {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 60px 8px 60px;
+  overflow: hidden;
+}
+
+.player-battle-sprite-wrapper {
+  width: 220px;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.player-sprite-inner {
+  height: 88%;
+  max-height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.player-sprite-inner img {
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.65));
+}
+
+.player-ground-shadow, .enemy-ground-shadow {
+  width: 140px;
+  height: 16px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 70%);
+  border-radius: 50%;
+  margin-top: -8px;
+  flex-shrink: 0;
+}
+
+.enemy-sprite-wrapper {
+  width: 230px;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.enemy-sprite-inner {
+  height: 88%;
+  max-height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.enemy-sprite-inner img {
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.65));
+}
+
+/* 絕技橫幅大公告 */
+.battle-announcement-banner {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0) 0%, rgba(16, 185, 129, 0.95) 20%, rgba(16, 185, 129, 0.95) 80%, rgba(16, 185, 129, 0) 100%);
+  color: #ffffff;
+  font-size: clamp(20px, 2.5vw, 28px);
+  font-weight: 900;
+  padding: 10px 48px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  border-top: 2px solid #fde047;
+  border-bottom: 2px solid #fde047;
+  z-index: 50;
+  white-space: nowrap;
+}
+
+/* 下半部：狀態與指令面板 (高度固定 405px，佔 720px 基準之 ~56.25%，保證答題按鈕空間充足) */
+.battle-lower-section {
+  flex: 1 1 0 !important;
+  height: 405px !important;
+  min-height: 405px !important;
+  max-height: 405px !important;
+  background: #0f172a;
+  border-top: 3px solid #10b981;
+  display: flex;
+  padding: 10px 14px;
+  gap: 12px;
+  z-index: 10;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 左側主角 HUD 卡片 */
+.status-section {
+  width: 230px;
+  flex-shrink: 0;
+  height: 100%;
+  min-height: 0;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.player-card-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.player-avatar-frame {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid #34d399;
+  overflow: hidden;
+  background: #0b0f19;
+  flex-shrink: 0;
+}
+
+.player-avatar-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.player-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.player-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-level-badge {
+  display: inline-block;
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-top: 1px;
+}
+
+.player-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 5px 0;
+  flex-shrink: 0;
+}
+
+.status-bar-row .bar-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.label-hp { color: #34d399; }
+.label-mp { color: #38bdf8; }
+
+.bar-container {
+  height: 11px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.bar-mp-player {
+  background: linear-gradient(90deg, #0284c7 0%, #38bdf8 100%);
+}
+
+.player-inventory-preview {
+  font-size: 13px;
+  font-weight: 700;
+  color: #cbd5e1;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 5px;
+  flex-shrink: 0;
+}
+
+/* 中間：預設答題攻擊互動區 (常駐顯示題目，答題後無縫連貫) */
+.quiz-interactive-area {
+  flex: 1;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1.5px solid rgba(16, 185, 129, 0.45);
+  border-radius: 12px;
+  padding: 8px 14px;
+  box-sizing: border-box;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.quiz-panel-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.quiz-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+  gap: 8px;
+}
+
+.quiz-cat-tag {
+  background: rgba(16, 185, 129, 0.25);
+  color: #34d399;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(16, 185, 129, 0.5);
+  white-space: nowrap;
+}
+
+.quiz-question-card {
+  background: rgba(30, 41, 59, 0.88);
+  border-radius: 12px;
+  padding: 6px 14px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.35;
+  border-left: 5px solid #34d399;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  min-height: 52px;
+  max-height: 72px;
+  overflow-y: auto;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35), 0 2px 10px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.3px;
+}
+
+.quiz-question-card::-webkit-scrollbar {
+  width: 5px;
+}
+.quiz-question-card::-webkit-scrollbar-thumb {
+  background: rgba(52, 211, 153, 0.5);
+  border-radius: 4px;
+}
+.quiz-question-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.quiz-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+}
+
+.quiz-opt-btn {
+  background: rgba(30, 41, 59, 0.92);
+  border: 1.8px solid rgba(255, 255, 255, 0.22);
+  border-radius: 12px;
+  padding: 6px 14px;
+  text-align: left;
+  color: #ffffff;
+  font-size: 19px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  line-height: 1.35;
+  height: 100%;
+  min-height: 0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  overflow: hidden;
+  letter-spacing: 0.2px;
+}
+
+.quiz-opt-btn:hover {
+  background: rgba(51, 65, 85, 0.98);
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.35);
+}
+
+.opt-badge {
+  background: #0f172a;
+  color: #fde047;
+  font-weight: 900;
+  font-size: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(250, 204, 21, 0.85);
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.opt-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1.32;
+  word-break: break-word;
+}
+
+/* 右側輔助快捷操作欄 (專屬特技、營養補給、撤退地圖) */
+.battle-side-actions {
+  width: 130px;
+  flex-shrink: 0;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.side-action-btn {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 6px;
+  border-radius: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  box-sizing: border-box;
+}
+
+.side-action-btn .side-btn-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.side-action-btn .side-btn-label {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.btn-side-skill {
+  background: linear-gradient(135deg, rgba(6, 78, 59, 0.92) 0%, rgba(16, 185, 129, 0.85) 100%);
+  color: #ecfdf5;
+  border-color: #34d399;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+}
+.btn-side-skill:hover {
+  background: linear-gradient(135deg, rgba(5, 150, 105, 1) 0%, rgba(52, 211, 153, 0.95) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(52, 211, 153, 0.55);
+}
+
+.btn-side-item {
+  background: linear-gradient(135deg, rgba(30, 58, 138, 0.92) 0%, rgba(2, 132, 199, 0.85) 100%);
+  color: #f0f9ff;
+  border-color: #38bdf8;
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.35);
+}
+.btn-side-item:hover {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 1) 0%, rgba(56, 189, 248, 0.95) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.55);
+}
+
+.btn-side-run {
+  background: linear-gradient(135deg, rgba(51, 65, 85, 0.85) 0%, rgba(71, 85, 105, 0.75) 100%);
+  color: #e2e8f0;
+  border-color: #64748b;
+}
+.btn-side-run:hover {
+  background: linear-gradient(135deg, rgba(71, 85, 105, 0.98) 0%, rgba(100, 116, 139, 0.92) 100%);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.45);
+}
+
+/* 浮動快捷選單 (Popover) */
+.battle-action-popover {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  width: clamp(280px, 32vw, 360px);
+  background: rgba(15, 23, 42, 0.97);
+  border: 2px solid #34d399;
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(16, 185, 129, 0.3);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: popoverFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes popoverFadeIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.popover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #fde047;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 6px;
+}
+
+.popover-close-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: 4px;
+}
+.popover-close-btn:hover {
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.15);
+}
+
+.popover-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.popover-item-btn {
+  background: rgba(30, 41, 59, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #f1f5f9;
+  font-size: 12.5px;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.popover-item-btn:hover {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: #34d399;
+  transform: translateX(4px);
+}
+
+.item-stock-tag {
+  background: rgba(250, 204, 21, 0.2);
+  color: #fde047;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
+.cost-tag {
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  font-size: 10.5px;
+  padding: 2px 7px;
+  border-radius: 8px;
+}
+
+/* 戰鬥畫面正中間浮動即時訊息容器 */
+.battle-floating-msg-layer {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 60;
+  pointer-events: none;
+}
+
+/* 戰鬥日誌 (Battle Log) */
+.battle-log-container {
+  flex: 1;
+  min-height: 0;
+  background: rgba(11, 15, 25, 0.75);
+  border-radius: 8px;
+  padding: 6px 10px;
+  overflow-y: auto;
+  font-size: 11.5px;
+  line-height: 1.45;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.log-line {
+  color: #cbd5e1;
+}
+.log-info { color: #38bdf8; }
+.log-hit { color: #34d399; font-weight: bold; }
+.log-damage { color: #f87171; font-weight: bold; }
+
+/* ==========================================================================
+   4. 管理者後台 (Admin Modal)
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(6px);
+}
+
+.modal-window {
+  background: #0f172a;
+  border: 2px solid var(--primary-green);
+  border-radius: 20px;
+  width: 90%;
+  max-width: 1080px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%);
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1.5px solid var(--primary-green);
+}
+
+.modal-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #34d399;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 26px;
+  cursor: pointer;
+  line-height: 1;
+}
+.modal-close-btn:hover { color: #ffffff; }
+
+.modal-body {
+  padding: 16px 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.admin-nav-tabs {
+  display: flex;
+  gap: 6px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.admin-tab-btn {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  color: #cbd5e1;
+  padding: 6px 14px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.admin-tab-btn.active {
+  background: #059669;
+  border-color: #34d399;
+  color: #ffffff;
+}
+
+.admin-textarea {
+  width: 100%;
+  height: 120px;
+  background: #0b0f19;
+  border: 1.5px solid rgba(16, 185, 129, 0.4);
+  color: #f1f5f9;
+  border-radius: 8px;
+  padding: 10px;
+  font-family: Consolas, monospace;
+  font-size: 12.5px;
+  outline: none;
+  resize: vertical;
+}
+
+/* AI Prompt 卡片 */
+.ai-prompt-helper-card {
+  background: rgba(30, 27, 75, 0.5);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.ai-prompt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.ai-prompt-preview {
+  background: rgba(11, 15, 25, 0.7);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: Consolas, monospace;
+  font-size: 11px;
+  color: #cbd5e1;
+  max-height: 90px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+.btn-copy-prompt {
+  background: #7c3aed;
+  color: #ffffff;
+  padding: 4px 10px;
+  font-size: 11.5px;
+}
+
+/* 學生作答指標看板 */
+.stats-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.stat-card {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 10px 14px;
+  text-align: center;
+}
+
+.stat-label { font-size: 12px; color: #94a3b8; }
+.stat-val { font-size: 22px; font-weight: 900; color: #f8fafc; margin-top: 2px; }
+
+/* 錯題分析排行榜卡片 */
+.mistake-card {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+}
+
+/* ==========================================================================
+   5. 全通關慶典與成果報告書 (Ending Screen)
+   ========================================================================== */
+.ending-modal-backdrop {
+  z-index: 2000;
+  background: rgba(5, 10, 20, 0.94);
+}
+
+.ending-confetti-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.ending-main-window {
+  position: relative;
+  z-index: 20;
+  max-width: 960px;
+  width: 92%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #0f172a;
+  border: 2px solid #fde047;
+  border-radius: 24px;
+  padding: 24px 30px;
+  box-shadow: 0 0 50px rgba(250, 204, 21, 0.5);
+}
+
+.ending-super-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 4px 16px;
+  border-radius: 20px;
+  letter-spacing: 2px;
+}
+
+.ending-grand-title {
+  font-size: clamp(24px, 4vw, 38px);
+  color: #fde047;
+  font-weight: 900;
+  margin: 8px 0;
+}
+
+.ending-heroes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.ending-hero-card {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1.5px solid rgba(250, 204, 21, 0.3);
+  border-radius: 16px;
+  padding: 12px 8px;
+  text-align: center;
+}
+
+.ending-hero-avatar-halo img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid #fde047;
+}
+
+.ending-hero-name { font-weight: 800; color: #f1f5f9; font-size: 13px; margin: 4px 0; }
+.ending-hero-quote { font-size: 11px; color: #cbd5e1; line-height: 1.35; }
+
+.ending-stats-dashboard {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.ending-stat-box {
+  background: rgba(30, 41, 59, 0.7);
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+}
+
+.text-gold { color: #fde047 !important; }
+.text-green { color: #34d399 !important; }
+.text-blue { color: #38bdf8 !important; }
+
+/* ==========================================================================
+   6. 課堂全螢幕簡報模式 (Presentation Mode)
+   ========================================================================== */
+.presentation-backdrop {
+  position: fixed;
+  inset: 0;
+  background: #0b0f19;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+}
+
+.presentation-window {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 32px;
+}
+
+.pres-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+}
+
+.pres-mode-tag {
+  font-size: 16px;
+  font-weight: 900;
+  color: #34d399;
+}
+
+.pres-tool-btn, .pres-close-btn {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f1f5f9;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.pres-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 20px 0;
+}
+
+.pres-question-text {
+  font-size: clamp(24px, 3.5vw, 36px);
+  font-weight: 900;
+  color: #fde047;
+  line-height: 1.4;
+  margin-bottom: 24px;
+}
+
+.pres-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.pres-option-card {
+  background: rgba(30, 41, 59, 0.85);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 16px 20px;
+  font-size: clamp(16px, 2vw, 22px);
+  font-weight: 700;
+  color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pres-option-card.correct-revealed {
+  border-color: #34d399;
+  background: rgba(6, 78, 59, 0.9);
+  color: #a7f3d0;
+}
+
+.pres-explanation-card {
+  margin-top: 20px;
+  background: rgba(6, 78, 59, 0.4);
+  border-left: 4px solid #10b981;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  color: #e2e8f0;
+  line-height: 1.5;
+}
+
+.pres-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 12px;
+}
+
+.pres-nav-btn {
+  background: #059669;
+  color: #ffffff;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   7. 跨載具等比例縮放說明 (Managed by ViewportScaler engine on #game-stage)
+   ========================================================================== */
+/* 所有畫面元件在 720px 基準高度下保持統一設計比例，由 #game-stage 自動等比例縮放，
+   確保平板（iPad/Android）在高度受限情況下 100% 垂直完整露出，答題按鈕與操作欄零切割。 */
+
+/* 後台勇者與魔王切換膠囊高亮樣式 */
+#admin-hero-pills-row .admin-tab-btn.active,
+#admin-hero-pills-row .admin-pill-btn.active {
+  background: linear-gradient(135deg, #064e3b 0%, #059669 100%) !important;
+  border-color: #34d399 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(52, 211, 153, 0.6) !important;
+  font-weight: 800 !important;
+}
+
+#admin-boss-pills-row .admin-tab-btn.active,
+#admin-boss-pills-row .admin-pill-btn.active {
+  background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%) !important;
+  border-color: #f87171 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.6) !important;
+  font-weight: 800 !important;
+}
+
