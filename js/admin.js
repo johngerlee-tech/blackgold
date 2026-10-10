@@ -1360,17 +1360,53 @@ const AdminManager = (function () {
         </div>
       `;
 
-      // 單圖上傳取代 (相容本地與 Firebase 雲端/Base64)
+      // 單圖上傳取代 (自動透過 HTML5 Canvas 智慧壓縮轉為高效 WebP，防範 Firebase 1MB 超標與網路壅塞)
       card.querySelector(".btn-upload-single")?.addEventListener("click", () => {
         const input = document.getElementById("input-single-image-upload");
-        input.onchange = (e) => {
+        input.onchange = async (e) => {
           const file = e.target.files?.[0];
           if (!file) return;
-          const reader = new FileReader();
-          reader.onload = async () => {
+
+          // 依圖片類型自適應最佳縮放上限 (頭像 400px、立繪 900px、背景 1600px)
+          let maxDim = 900;
+          if (img.filename.startsWith("avatar_")) maxDim = 400;
+          else if (img.category === "backgrounds" || img.category === "system") maxDim = 1600;
+
+          try {
+            const compressedDataUrl = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = (loadEvt) => {
+                const tempImg = new Image();
+                tempImg.onload = () => {
+                  let w = tempImg.width;
+                  let h = tempImg.height;
+                  if (w > maxDim || h > maxDim) {
+                    const ratio = Math.min(maxDim / w, maxDim / h);
+                    w = Math.round(w * ratio);
+                    h = Math.round(h * ratio);
+                  }
+                  const canvas = document.createElement("canvas");
+                  canvas.width = w;
+                  canvas.height = h;
+                  const ctx = canvas.getContext("2d");
+                  ctx.drawImage(tempImg, 0, 0, w, h);
+                  // 嘗試 WebP 輸出 (若瀏覽器支援則產出高品質極小 WebP)
+                  let dataUrl = canvas.toDataURL("image/webp", 0.85);
+                  if (!dataUrl.startsWith("data:image/webp")) {
+                    dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+                  }
+                  resolve(dataUrl);
+                };
+                tempImg.onerror = reject;
+                tempImg.src = loadEvt.target.result;
+              };
+              reader.onerror = reject;
+              reader.readAsDataURL(file);
+            });
+
             if (!DataManager.config) await DataManager.loadConfig();
             if (!DataManager.config.customImages) DataManager.config.customImages = {};
-            DataManager.config.customImages[img.filename] = reader.result;
+            DataManager.config.customImages[img.filename] = compressedDataUrl;
             await DataManager.saveConfig(DataManager.config);
 
             // 若有本機伺服器也同步寫入硬碟
@@ -1378,14 +1414,16 @@ const AdminManager = (function () {
               await fetch("/api/upload-image", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ filename: img.filename, data: reader.result }),
+                body: JSON.stringify({ filename: img.filename, data: compressedDataUrl }),
               });
             } catch (err) {}
 
-            alert(`✅ 已成功套用自訂圖片：【${img.name}】！`);
+            alert(`✅ 已成功最佳化並套用自訂圖片：【${img.name}】！`);
             renderImagesTab();
-          };
-          reader.readAsDataURL(file);
+          } catch (err) {
+            console.error("圖片壓縮失敗:", err);
+            alert("⚠️ 圖片上傳或壓縮失敗，請重試！");
+          }
         };
         input.click();
       });

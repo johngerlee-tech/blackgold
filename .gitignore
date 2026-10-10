@@ -69,3 +69,8 @@ desktop.ini
 .env
 .env.local
 firebase-service-account*.json
+
+# 忽略誤複製或巢狀倉庫目錄
+blackgold/
+blackgoldRPG/
+

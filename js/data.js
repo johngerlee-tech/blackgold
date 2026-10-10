@@ -323,14 +323,22 @@ const DataManager = (function () {
     return res || { success: true };
   }
 
-  // 7. 圖片智慧解析 (支援自訂圖片與雙向智慧回退)
+  // 7. 圖片智慧解析 (優先使用高效率 WebP 格式，並完整支援自訂圖片與雙向智慧回退)
   function resolveImageUrl(filename, defaultPath) {
-    if (!configCache) return defaultPath;
+    // 預設將路徑轉換為高畫質極度輕量化之 .webp 格式
+    const webpFallback = (defaultPath || `assets/images/${filename}`).replace(/\.(png|jpg|jpeg)$/i, ".webp");
+    if (!configCache) return webpFallback;
+
     const customImages = configCache.customImages || {};
 
-    // 1. 若該檔名有自訂圖片，直接回傳 (支援 Base64、URL 或本地路徑)
-    if (customImages[filename]) {
-      return customImages[filename];
+    // 1. 若該檔名有自訂圖片
+    const customVal = customImages[filename];
+    if (customVal) {
+      // 若舊版設定殘留有指向 assets/images/custom/... 的預設重複檔，自動升級為高效 WebP
+      if (typeof customVal === "string" && customVal.includes("assets/images/custom/") && customVal.includes("?t=")) {
+        return webpFallback;
+      }
+      return customVal;
     }
 
     // 2. 雙向智慧回退：
@@ -341,7 +349,7 @@ const DataManager = (function () {
         .replace("hero_sprite_syl.png", "avatar_syl.png")
         .replace("hero_sprite_mul.png", "avatar_mul.png")
         .replace("hero_sprite.png", "avatar_purple.png");
-      if (customImages[mappedAvatar]) {
+      if (customImages[mappedAvatar] && !(typeof customImages[mappedAvatar] === "string" && customImages[mappedAvatar].includes("assets/images/custom/"))) {
         return customImages[mappedAvatar];
       }
     }
@@ -352,12 +360,12 @@ const DataManager = (function () {
         .replace("avatar_syl.png", "hero_sprite_syl.png")
         .replace("avatar_mul.png", "hero_sprite_mul.png")
         .replace("avatar_purple.png", "hero_sprite.png");
-      if (customImages[mappedSprite]) {
+      if (customImages[mappedSprite] && !(typeof customImages[mappedSprite] === "string" && customImages[mappedSprite].includes("assets/images/custom/"))) {
         return customImages[mappedSprite];
       }
     }
 
-    return defaultPath;
+    return webpFallback;
   }
 
   // 8. 儲存遊戲設定

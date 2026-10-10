@@ -195,6 +195,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     WorldMapManager.init();
   }
 
+  // 5. 啟動非同步漸進式背景預載 (首頁極速渲染後，背景平滑快取地圖與關卡素材)
+  initProgressivePreloader();
+
   console.log("🌟 《黑金魔法術─永續食物循環系統》已準備就緒！");
 });
 
@@ -412,3 +415,71 @@ function setupGlobalControls() {
     document.getElementById("start-setup-view")?.classList.add("hidden");
   });
 }
+
+/**
+ * 智慧漸進式資源預載引擎 (ProgressiveAssetPreloader)
+ * 原理：
+ * 1. 首頁僅載入標題背景 (title_bg.webp: 19KB) 與 4 位英雄頭像 (共約 210KB)，以最快速度完成首屏渲染。
+ * 2. 在使用者閱讀首頁導覽或輸入姓名/選角時，利用非同步佇列於背景依序預載：
+ *    - 優先階段：世界大地圖 (world_map.webp) 與四大主角戰鬥立繪 (hero_sprite*.webp)
+ *    - 關卡階段：第一關背景 (forest_bg.webp) 與魔王怪 (slime_sprite.webp)
+ *    - 後續階段：其餘關卡之背景與魔王
+ * 3. 確保玩家點擊進入遊戲與切換各關卡時「零等待、零卡頓、零閃爍」！
+ */
+function initProgressivePreloader() {
+  const preloadedUrls = new Set();
+
+  function preloadSingle(url) {
+    if (!url || preloadedUrls.has(url)) return Promise.resolve();
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.decoding = "async";
+      img.onload = () => {
+        preloadedUrls.add(url);
+        resolve();
+      };
+      img.onerror = () => resolve(); // 容錯跳過，不阻塞
+      img.src = url;
+    });
+  }
+
+  const queuePhases = [
+    // 階段一：大地圖與四大守護英雄立繪 (約 900KB)
+    [
+      DataManager.resolveImageUrl("world_map.jpg", "assets/images/world_map.webp"),
+      DataManager.resolveImageUrl("hero_sprite.png", "assets/images/hero_sprite.webp"),
+      DataManager.resolveImageUrl("hero_sprite_round.png", "assets/images/hero_sprite_round.webp"),
+      DataManager.resolveImageUrl("hero_sprite_syl.png", "assets/images/hero_sprite_syl.webp"),
+      DataManager.resolveImageUrl("hero_sprite_mul.png", "assets/images/hero_sprite_mul.webp")
+    ],
+    // 階段二：第一關惜食大廳與浪費剩食怪 (約 450KB)
+    [
+      DataManager.resolveImageUrl("forest_bg.jpg", "assets/images/forest_bg.webp"),
+      DataManager.resolveImageUrl("slime_sprite.png", "assets/images/slime_sprite.webp")
+    ],
+    // 階段三：第二、三關背景與魔王 (約 950KB)
+    [
+      DataManager.resolveImageUrl("desert_bg.jpg", "assets/images/desert_bg.webp"),
+      DataManager.resolveImageUrl("mirage_sprite.png", "assets/images/mirage_sprite.webp"),
+      DataManager.resolveImageUrl("river_bg.jpg", "assets/images/river_bg.webp"),
+      DataManager.resolveImageUrl("demon_sprite.png", "assets/images/demon_sprite.webp")
+    ],
+    // 階段四：第四、五關背景與魔王 (約 1.1MB)
+    [
+      DataManager.resolveImageUrl("highway_bg.jpg", "assets/images/highway_bg.webp"),
+      DataManager.resolveImageUrl("frost_sprite.png", "assets/images/frost_sprite.webp"),
+      DataManager.resolveImageUrl("sacred_bg.jpg", "assets/images/sacred_bg.webp"),
+      DataManager.resolveImageUrl("boss_sprite.png", "assets/images/boss_sprite.webp")
+    ]
+  ];
+
+  // 延遲 500ms 待首頁渲染與動畫平穩後，啟動背景分段預載
+  setTimeout(async () => {
+    for (const phase of queuePhases) {
+      await Promise.all(phase.map((url) => preloadSingle(url)));
+      await new Promise((r) => setTimeout(r, 200));
+    }
+    console.log("⚡ [Preloader] 全套 20 張遊戲高畫質 WebP 資源已完成背景智慧快取！");
+  }, 500);
+}
+

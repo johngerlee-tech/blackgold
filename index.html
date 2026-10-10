@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
   <title>黑金魔法術：永續食物循環系統 - 互動式 RPG 答題遊戲</title>
-  <!-- 引入可愛活潑圓潤字體 -->
+  <!-- 預先連線字型 CDN 並最佳化字型子集與非同步載入 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
-  <!-- 樣式表 (防快取版本) -->
-  <link rel="stylesheet" href="css/animations.css?v=20261007_v3">
-  <link rel="stylesheet" href="css/style.css?v=20261007_v3">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+  <!-- 優先預載關鍵資產 (首頁秒開極速體驗) -->
+  <link rel="preload" as="image" href="assets/images/title_bg.webp" type="image/webp">
+  <link rel="preload" as="image" href="assets/images/avatar_purple.webp" type="image/webp">
+  <!-- 樣式表 (最佳化版本) -->
+  <link rel="stylesheet" href="css/animations.css?v=20261010_opt">
+  <link rel="stylesheet" href="css/style.css?v=20261010_opt">
 </head>
 <body>
 
@@ -39,7 +39,7 @@
       <!-- ==============================================
            1. 主畫面 (Start Screen)
       ============================================== -->
-      <section id="start-screen" style="background-image: url('assets/images/title_bg.jpg');">
+      <section id="start-screen" style="background-image: url('assets/images/title_bg.webp');">
       <div class="start-overlay"></div>
 
       <!-- 遊戲 LOGO 標題 -->
@@ -133,7 +133,7 @@
     ============================================== -->
     <section id="worldmap-screen" class="hidden">
       <!-- 大地圖視角區域 -->
-      <div id="worldmap-container" class="worldmap-viewport" style="background-image: url('assets/images/world_map.jpg');">
+      <div id="worldmap-container" class="worldmap-viewport" style="background-image: url('assets/images/world_map.webp');">
 
         <!-- 大地圖頂部狀態導覽 -->
         <div class="map-top-bar">
@@ -1187,15 +1187,15 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
-  <!-- 引入 JavaScript 模組 (防快取版本) -->
-  <script src="firebase-config.js?v=20261009_v4"></script>
-  <script src="js/game-images-meta.js?v=20261009_v4"></script>
-  <script src="js/firebase-service.js?v=20261009_v4"></script>
-  <script src="js/audio.js?v=20261009_v4"></script>
-  <script src="js/data.js?v=20261009_v4"></script>
-  <script src="js/admin.js?v=20261009_v4"></script>
-  <script src="js/worldmap.js?v=20261009_v4"></script>
-  <script src="js/battle.js?v=20261009_v4"></script>
-  <script src="js/main.js?v=20261009_v4"></script>
+  <!-- 引入 JavaScript 模組 (最佳化版本) -->
+  <script src="firebase-config.js?v=20261010_opt"></script>
+  <script src="js/game-images-meta.js?v=20261010_opt"></script>
+  <script src="js/firebase-service.js?v=20261010_opt"></script>
+  <script src="js/audio.js?v=20261010_opt"></script>
+  <script src="js/data.js?v=20261010_opt"></script>
+  <script src="js/admin.js?v=20261010_opt"></script>
+  <script src="js/worldmap.js?v=20261010_opt"></script>
+  <script src="js/battle.js?v=20261010_opt"></script>
+  <script src="js/main.js?v=20261010_opt"></script>
 </body>
 </html>
