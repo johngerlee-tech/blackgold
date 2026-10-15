@@ -17,10 +17,11 @@
  */
 
 window.FIREBASE_CONFIG = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: ""
+  apiKey : "AIzaSyCSeZyk3tf6wBZSNf9jltAYIqXY36XJIuE" , 
+  authDomain : "blackgold-5311c.firebaseapp.com" , 
+  projectId : "blackgold-5311c" , 
+  storageBucket : "blackgold-5311c.firebasestorage.app" , 
+  messagingSenderId : "532600745285" , 
+  appId : "1:532600745285:web:d3c2cd40b868f225a0e22c" , 
+  measurementId : "G-V4HXRG29Q9" 
 };
